@@ -1,11 +1,11 @@
 package net.crashcraft.crashclaim.config;
 
+import net.crashcraft.crashclaim.claimobjects.PermState;
 import net.crashcraft.crashclaim.visualize.api.VisualColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.*;
@@ -159,5 +159,29 @@ public class GlobalConfig extends BaseConfig{
 
     private static void onStats(){
         useStatistics = getBoolean("statistics", true);
+    }
+
+    public static int global_perm_build;
+    public static int global_perm_interactions;
+    public static int global_perm_entities;
+    public static int global_perm_explosions;
+    public static int global_perm_teleportation;
+    public static int global_perm_view_subclaims;
+    public static int global_perm_containers;
+    public static int global_perm_pistons;
+    public static int global_perm_fluids;
+    public static int global_perm_mob_griefing;
+
+    private static void loadGlobalPermissions(){
+        global_perm_build = PermState.of(getString("global-permissions.build", "DISABLE"));
+        global_perm_interactions = PermState.of(getString("global-permissions.interactions", "DISABLE"));
+        global_perm_entities = PermState.of(getString("global-permissions.entities", "DISABLE"));
+        global_perm_explosions = PermState.of(getString("global-permissions.explosions", "DISABLE"));
+        global_perm_teleportation = PermState.of(getString("global-permissions.teleportation", "DISABLE"));
+        global_perm_view_subclaims = PermState.of(getString("global-permissions.view-subclaims", "DISABLE"));
+        global_perm_containers = PermState.of(getString("global-permissions.containers", "DISABLE"));
+        global_perm_pistons = PermState.of(getString("global-permissions.pistons", "DISABLE"));
+        global_perm_fluids = PermState.of(getString("global-permissions.fluids", "DISABLE"));
+        global_perm_mob_griefing = PermState.of(getString("global-permissions.mob-griefing", "DISABLE"));
     }
 }

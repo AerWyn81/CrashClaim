@@ -5,6 +5,7 @@ import net.crashcraft.crashclaim.claimobjects.PermState;
 import net.crashcraft.crashclaim.claimobjects.PermissionGroup;
 import net.crashcraft.crashclaim.claimobjects.permission.GlobalPermissionSet;
 import net.crashcraft.crashclaim.claimobjects.permission.PlayerPermissionSet;
+import net.crashcraft.crashclaim.config.GlobalConfig;
 import net.crashcraft.crashclaim.permissions.PermissionRoute;
 
 import java.util.HashMap;
@@ -27,8 +28,8 @@ public class ParentPermissionGroup extends PermissionGroup {
 
     @Override
     public GlobalPermissionSet createGlobalPermissionSet() {
-        return new GlobalPermissionSet(PermState.DISABLE, PermState.DISABLE, PermState.DISABLE, PermState.DISABLE, PermState.DISABLE, PermState.ENABLED, PermState.ENABLED,
-                new HashMap<>(), PermState.DISABLE, PermState.DISABLE, PermState.DISABLE);
+        return new GlobalPermissionSet(GlobalConfig.global_perm_build, GlobalConfig.global_perm_interactions, GlobalConfig.global_perm_entities, GlobalConfig.global_perm_explosions, GlobalConfig.global_perm_mob_griefing, GlobalConfig.global_perm_teleportation, GlobalConfig.global_perm_view_subclaims,
+                new HashMap<>(), GlobalConfig.global_perm_containers, GlobalConfig.global_perm_pistons, GlobalConfig.global_perm_fluids);
     }
 
     @Override

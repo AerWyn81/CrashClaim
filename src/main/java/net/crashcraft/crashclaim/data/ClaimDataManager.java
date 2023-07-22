@@ -103,7 +103,24 @@ public class ClaimDataManager implements Listener {
             }
         }, 200L, 200L);
 
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::warnClaimsTooBig, 200L, 12000L);
+
         Bukkit.getPluginManager().registerEvents(this, plugin);
+    }
+
+    private void warnClaimsTooBig() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            GroupSettings groupSettings = plugin.getPluginSupport().getPlayerGroupSettings(player);
+
+            long areaSize = getOwnedParentClaims(player.getUniqueId()).stream()
+                    .filter(c -> c.getOwner().equals(player.getUniqueId()))
+                    .map(c -> ContributionManager.getArea(c.getMinX(), c.getMinZ(), c.getMaxX(), c.getMaxZ()))
+                    .mapToInt(i -> i).sum();
+
+            if (areaSize > groupSettings.getMaxClaimsArea()) {
+                logger.warning("CLAIM LIMIT : " + player.getName() + " have too much claims (" + areaSize + " / " + groupSettings.getMaxClaimsArea() + ")");
+            }
+        }
     }
 
     public int requestUniqueID(){

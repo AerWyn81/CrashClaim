@@ -71,7 +71,7 @@ dependencies {
 
 tasks {
     shadowJar {
-        archiveFileName.set("${rootProject.name}.jar")
+        archiveFileName.set("${rootProject.name}-${archiveVersion.getOrElse("unknown")}.jar")
 
         relocate("co.aikar.commands", "net.crashcraft.crashclaim.acf")
         relocate("co.aikar.idb", "net.crashcraft.crashclaim.idb")

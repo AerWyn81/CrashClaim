@@ -41,7 +41,8 @@ public class GlobalConfig extends BaseConfig{
 
         for (String groupName : keys){
             groupSettings.put(groupName, new GroupSettings(
-                    getInt(baseKey + "." + groupName + ".max-claims", -1)
+                    getInt(baseKey + "." + groupName + ".max-claims", -1),
+                    getInt(baseKey + "." + groupName + ".max-claims-blocks", -1)
             ));
         }
     }

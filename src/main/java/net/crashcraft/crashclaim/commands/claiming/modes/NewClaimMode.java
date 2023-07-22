@@ -6,6 +6,7 @@ import net.crashcraft.crashclaim.claimobjects.Claim;
 import net.crashcraft.crashclaim.commands.claiming.ClaimCommand;
 import net.crashcraft.crashclaim.commands.claiming.ClaimMode;
 import net.crashcraft.crashclaim.config.GlobalConfig;
+import net.crashcraft.crashclaim.config.GroupSettings;
 import net.crashcraft.crashclaim.data.ClaimDataManager;
 import net.crashcraft.crashclaim.data.ClaimResponse;
 import net.crashcraft.crashclaim.data.ContributionManager;
@@ -60,6 +61,21 @@ public class NewClaimMode implements ClaimMode {
         if (!CrashClaim.getPlugin().getPluginSupport().canClaim(min, max)){
             player.spigot().sendMessage(Localization.NEW_CLAIM__OTHER_ERROR.getMessage(player));
             return false;
+        }
+
+        final GroupSettings groupSettings = CrashClaim.getPlugin().getPluginSupport().getPlayerGroupSettings(player);
+
+        if (groupSettings.getMaxClaimsArea() > 0) {
+            final long totalClaimed = manager.getOwnedParentClaims(player.getUniqueId()).stream()
+                    .filter(c -> c.getOwner() == player.getUniqueId())
+                    .map(c -> ContributionManager.getArea(c.getMinX(), c.getMinZ(), c.getMaxX(), c.getMaxZ()))
+                    .mapToInt(i -> i).sum();
+
+            long newArea = ContributionManager.getArea(min.getBlockX(), min.getBlockZ(), max.getBlockX(), max.getBlockZ());
+            if (totalClaimed + newArea > groupSettings.getMaxClaimsArea()) {
+                player.spigot().sendMessage(Localization.NEW_CLAIM__TOO_BIG.getMessage(player, "actual", String.valueOf(totalClaimed), "new", String.valueOf(newArea), "max", String.valueOf(groupSettings.getMaxClaimsArea())));
+                return false;
+            }
         }
 
         return true;

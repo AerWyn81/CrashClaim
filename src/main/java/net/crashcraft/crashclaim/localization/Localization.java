@@ -13,7 +13,6 @@ import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.craftbukkit.BukkitComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -160,6 +159,7 @@ public enum Localization {
     NEW_CLAIM__NOT_ENOUGH_BALANCE("<red>You need <price> coins to claim that area."),
     NEW_CLAIM__SUCCESS("<green>Claim has been successfully created."),
     NEW_CLAIM__ERROR("<red>Error creating claim."),
+    NEW_CLAIM__TOO_BIG("<red>You have exceeded the number of blocks you can claim <gray>(actual: <green><actual> <gray>(<red>+<new><gray>)/<max>)<red>."),
 
     NEW_CLAIM__DEFAULT_CLAIM_NAME("<gold><id>"),
     NEW_CLAIM__CREATE_MENU__TITLE("Confirm Claim Creation"),

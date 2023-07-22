@@ -9,6 +9,7 @@ import net.crashcraft.crashclaim.claimobjects.SubClaim;
 import net.crashcraft.crashclaim.claimobjects.permission.child.SubPermissionGroup;
 import net.crashcraft.crashclaim.claimobjects.permission.parent.ParentPermissionGroup;
 import net.crashcraft.crashclaim.config.GlobalConfig;
+import net.crashcraft.crashclaim.config.GroupSettings;
 import net.crashcraft.crashclaim.data.providers.DataProvider;
 import net.crashcraft.crashclaim.data.providers.sqlite.SQLiteDataProvider;
 import net.crashcraft.crashclaim.localization.Localization;
@@ -34,9 +35,7 @@ import org.cache2k.CacheEntry;
 import org.cache2k.IntCache;
 
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -177,6 +176,20 @@ public class ClaimDataManager implements Listener {
 
             int area = ContributionManager.getArea(newMinX, newMinZ, newMaxX, newMaxZ);
             int originalArea = ContributionManager.getArea(claim.getMinX(), claim.getMinZ(), claim.getMaxX(), claim.getMaxZ());
+
+            final GroupSettings groupSettings = CrashClaim.getPlugin().getPluginSupport().getPlayerGroupSettings(resizer);
+
+            if (groupSettings.getMaxClaimsArea() > 0) {
+                final long totalClaimed = getOwnedParentClaims(resizer.getUniqueId()).stream()
+                        .filter(c -> c.getOwner() == resizer.getUniqueId())
+                        .map(c -> ContributionManager.getArea(c.getMinX(), c.getMinZ(), c.getMaxX(), c.getMaxZ()))
+                        .mapToInt(i -> i).sum();
+
+                if (totalClaimed + area > groupSettings.getMaxClaimsArea()) {
+                    resizer.spigot().sendMessage(Localization.NEW_CLAIM__TOO_BIG.getMessage(resizer, "actual", String.valueOf(totalClaimed), "new", String.valueOf(area), "max", String.valueOf(groupSettings.getMaxClaimsArea())));
+                    return ErrorType.NONE;
+                }
+            }
 
             int difference = area - originalArea;
 

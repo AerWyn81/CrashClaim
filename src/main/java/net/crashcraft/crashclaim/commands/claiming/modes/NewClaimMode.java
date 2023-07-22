@@ -67,7 +67,7 @@ public class NewClaimMode implements ClaimMode {
 
         if (groupSettings.getMaxClaimsArea() > 0) {
             final long totalClaimed = manager.getOwnedParentClaims(player.getUniqueId()).stream()
-                    .filter(c -> c.getOwner() == player.getUniqueId())
+                    .filter(c -> c.getOwner().equals(player.getUniqueId()))
                     .map(c -> ContributionManager.getArea(c.getMinX(), c.getMinZ(), c.getMaxX(), c.getMaxZ()))
                     .mapToInt(i -> i).sum();
 

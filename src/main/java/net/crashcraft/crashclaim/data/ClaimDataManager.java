@@ -181,7 +181,7 @@ public class ClaimDataManager implements Listener {
 
             if (groupSettings.getMaxClaimsArea() > 0) {
                 final long totalClaimed = getOwnedParentClaims(resizer.getUniqueId()).stream()
-                        .filter(c -> c.getOwner() == resizer.getUniqueId())
+                        .filter(c -> c.getOwner().equals(resizer.getUniqueId()))
                         .map(c -> ContributionManager.getArea(c.getMinX(), c.getMinZ(), c.getMaxX(), c.getMaxZ()))
                         .mapToInt(i -> i).sum();
 

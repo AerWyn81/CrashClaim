@@ -3,9 +3,10 @@ package net.crashcraft.crashclaim.localization;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.crashcraft.crashclaim.CrashClaim;
 import net.crashcraft.crashclaim.claimobjects.Claim;
+import net.crashcraft.crashclaim.config.GroupSettings;
+import net.crashcraft.crashclaim.data.ContributionManager;
 import net.crashcraft.crashclaim.visualize.api.BaseVisual;
 import net.crashcraft.crashclaim.visualize.api.VisualGroup;
-import net.crashcraft.crashclaim.visualize.api.claim.BlockClaimVisual;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -24,6 +25,12 @@ public class CrashClaimExpansion extends PlaceholderExpansion {
             switch (params.toLowerCase()) {
                 case "total_owned_claims" -> {
                     return Integer.toString(crashClaim.getDataManager().getNumberOwnedClaims(player.getUniqueId()));
+                }
+                case "total_owned_claims_blocks" -> {
+                    return Integer.toString(crashClaim.getDataManager().getOwnedParentClaims(player.getUniqueId()).stream()
+                            .filter(c -> c.getOwner().equals(player.getUniqueId()))
+                            .map(c -> ContributionManager.getArea(c.getMinX(), c.getMinZ(), c.getMaxX(), c.getMaxZ()))
+                            .mapToInt(i -> i).sum());
                 }
                 case "total_owned_parent_claims" -> {
                     return Integer.toString(crashClaim.getDataManager().getNumberOwnedParentClaims(player.getUniqueId()));
@@ -47,6 +54,25 @@ public class CrashClaimExpansion extends PlaceholderExpansion {
 
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(claim.getOwner());
                     return offlinePlayer.getName();
+                }
+                case "current_claim_blocks" -> {
+                    if (!player.isOnline()){
+                        return null;
+                    }
+
+                    Player onlinePlayer = player.getPlayer();
+
+                    if (onlinePlayer == null){
+                        return null;
+                    }
+
+                    Claim claim = crashClaim.getDataManager().getClaim(onlinePlayer.getLocation());
+
+                    if (claim == null){
+                        return "-1";
+                    }
+
+                    return String.valueOf(ContributionManager.getArea(claim.getMinX(), claim.getMinZ(), claim.getMaxX(), claim.getMaxZ()));
                 }
                 case "visual_status" -> {
                     if (!player.isOnline()){
@@ -72,6 +98,34 @@ public class CrashClaimExpansion extends PlaceholderExpansion {
                     }
 
                     return Localization.PLACEHOLDERAPI__VISUAL_STATUS_HIDDEN.getRawMessage();
+                }
+                case "max_allowed_claims" -> {
+                    if (!player.isOnline()){
+                        return null;
+                    }
+
+                    Player onlinePlayer = player.getPlayer();
+
+                    if (onlinePlayer == null){
+                        return null;
+                    }
+
+                    GroupSettings groupSettings = CrashClaim.getPlugin().getPluginSupport().getPlayerGroupSettings(onlinePlayer);
+                    return String.valueOf(groupSettings.getMaxClaims());
+                }
+                case "max_allowed_claims_blocks" -> {
+                    if (!player.isOnline()){
+                        return null;
+                    }
+
+                    Player onlinePlayer = player.getPlayer();
+
+                    if (onlinePlayer == null){
+                        return null;
+                    }
+
+                    GroupSettings groupSettings = CrashClaim.getPlugin().getPluginSupport().getPlayerGroupSettings(onlinePlayer);
+                    return String.valueOf(groupSettings.getMaxClaimsArea());
                 }
             }
         }

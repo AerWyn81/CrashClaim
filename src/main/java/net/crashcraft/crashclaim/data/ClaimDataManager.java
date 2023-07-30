@@ -718,7 +718,7 @@ public class ClaimDataManager implements Listener {
     }
 
     public ArrayList<Claim> getOwnedClaims(UUID uuid) {
-        return getOwnedParentClaims(uuid).stream().filter(c -> c.getOwner() == uuid).collect(Collectors.toCollection(ArrayList::new));
+        return getOwnedParentClaims(uuid).stream().filter(c -> c.getOwner().equals(uuid)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public int getNumberOwnedClaims(UUID uuid) {

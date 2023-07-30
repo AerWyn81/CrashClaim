@@ -10,6 +10,8 @@ import net.crashcraft.crashclaim.data.ClaimDataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 
 import java.util.UUID;
 
@@ -107,6 +109,30 @@ public class PermissionHelper {
         } else {
             return claim.hasPermission(location, route);
         }
+    }
+
+    public Boolean hasPermission(UUID player, Location location, Entity entity){
+        if (bypassManager.isBypass(player)){
+            return true;
+        }
+
+        Claim claim = manager.getClaim(location.getBlockX(), location.getBlockZ(), location.getWorld().getUID());
+        if (claim == null){
+            return true;
+        }
+
+        var hasPermission = claim.hasPermission(player, location, PermissionRoute.ENTITIES);
+        if (hasPermission) {
+            return true;
+        }
+
+        if (entity != null && manager.getPermissionSetup().getTrackedMonsters().contains(entity.getType())) {
+            if (entity.getCustomName() == null && (entity instanceof LivingEntity l && l.getEquipment() != null && l.getEquipment().getItemInMainHand().getType() == Material.AIR)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public BypassManager getBypassManager() {

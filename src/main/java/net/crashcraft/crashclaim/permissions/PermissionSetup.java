@@ -7,6 +7,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Container;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Flying;
+import org.bukkit.entity.Monster;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 
@@ -22,6 +25,8 @@ public class PermissionSetup {
     private final ArrayList<Material> extraInteractables;
     private final ArrayList<Material> heldItemInteraction;
 
+    private final ArrayList<EntityType> trackedMonsters;
+
     private final PlayerPermissionSet ownerPermissionSet;
 
     public PermissionSetup(CrashClaim claim){
@@ -31,6 +36,7 @@ public class PermissionSetup {
         untrackedBlocks = new ArrayList<>();
         extraInteractables = new ArrayList<>();
         heldItemInteraction = new ArrayList<>();
+        trackedMonsters = new ArrayList<>();
 
         for (Material material : Material.values()){
             ItemStack stack = new ItemStack(material);
@@ -44,6 +50,16 @@ public class PermissionSetup {
                 if (meta.getBlockState() instanceof Container) {
                     trackedContainers.add(material);
                 }
+            }
+        }
+
+        for (EntityType entity : EntityType.values()){
+            if (entity.getEntityClass() == null) {
+                continue;
+            }
+
+            if (Monster.class.isAssignableFrom(entity.getEntityClass()) || entity.getEntityClass().isAssignableFrom(Flying.class)) {
+                trackedMonsters.add(entity);
             }
         }
 
@@ -131,5 +147,9 @@ public class PermissionSetup {
 
     public ArrayList<Material> getHeldItemInteraction() {
         return heldItemInteraction;
+    }
+
+    public ArrayList<EntityType> getTrackedMonsters() {
+        return trackedMonsters;
     }
 }

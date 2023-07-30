@@ -82,6 +82,8 @@ tasks {
         relocate("it.unimi.dsi", "net.crashcraft.crashclaim.fastutil")
         relocate("org.cache2k.IntCache", "net.crashcraft.crashclaim.cache2k")
         relocate("com.zaxxer.hikari", "net.crashcraft.crashclaim.hikari")
+
+        destinationDirectory.set(file(System.getenv("outputDir") ?: "$rootDir/build/"))
     }
 
     build {

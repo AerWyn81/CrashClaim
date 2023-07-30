@@ -94,6 +94,10 @@ public class PlayerListener implements Listener {
             return;
         }
 
+        // Prevent firework check on claim, issue with Elytras
+        if (e.getEntityType() == EntityType.FIREWORK)
+            return;
+
         if (e.getEntity().getShooter() instanceof Player player && !helper.hasPermission(player.getUniqueId(), player.getLocation(), PermissionRoute.ENTITIES)){
             e.setCancelled(true);
             visuals.sendAlert(player, Localization.ALERT__NO_PERMISSIONS__ENTITIES.getMessage(player));

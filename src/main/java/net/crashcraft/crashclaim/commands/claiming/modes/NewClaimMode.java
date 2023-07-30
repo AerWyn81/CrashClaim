@@ -63,18 +63,20 @@ public class NewClaimMode implements ClaimMode {
             return false;
         }
 
-        final GroupSettings groupSettings = CrashClaim.getPlugin().getPluginSupport().getPlayerGroupSettings(player);
+        if (!PermissionHelper.getPermissionHelper().getBypassManager().isBypass(player.getUniqueId())){
+            final GroupSettings groupSettings = CrashClaim.getPlugin().getPluginSupport().getPlayerGroupSettings(player);
 
-        if (groupSettings.getMaxClaimsArea() > 0) {
-            final long totalClaimed = manager.getOwnedParentClaims(player.getUniqueId()).stream()
-                    .filter(c -> c.getOwner().equals(player.getUniqueId()))
-                    .map(c -> ContributionManager.getArea(c.getMinX(), c.getMinZ(), c.getMaxX(), c.getMaxZ()))
-                    .mapToInt(i -> i).sum();
+            if (groupSettings.getMaxClaimsArea() > 0) {
+                final long totalClaimed = manager.getOwnedParentClaims(player.getUniqueId()).stream()
+                        .filter(c -> c.getOwner().equals(player.getUniqueId()))
+                        .map(c -> ContributionManager.getArea(c.getMinX(), c.getMinZ(), c.getMaxX(), c.getMaxZ()))
+                        .mapToInt(i -> i).sum();
 
-            long newArea = ContributionManager.getArea(min.getBlockX(), min.getBlockZ(), max.getBlockX(), max.getBlockZ());
-            if (totalClaimed + newArea > groupSettings.getMaxClaimsArea()) {
-                player.spigot().sendMessage(Localization.NEW_CLAIM__TOO_BIG.getMessage(player, "actual", String.valueOf(totalClaimed), "new", String.valueOf(newArea), "max", String.valueOf(groupSettings.getMaxClaimsArea())));
-                return false;
+                long newArea = ContributionManager.getArea(min.getBlockX(), min.getBlockZ(), max.getBlockX(), max.getBlockZ());
+                if (totalClaimed + newArea > groupSettings.getMaxClaimsArea()) {
+                    player.spigot().sendMessage(Localization.NEW_CLAIM__TOO_BIG.getMessage(player, "actual", String.valueOf(totalClaimed), "new", String.valueOf(newArea), "max", String.valueOf(groupSettings.getMaxClaimsArea())));
+                    return false;
+                }
             }
         }
 

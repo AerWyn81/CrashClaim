@@ -111,6 +111,9 @@ public class ResizeClaimMode implements ClaimMode {
                 return;
             case OVERLAP_EXISTING_OTHER:
                 player.spigot().sendMessage(Localization.RESIZE__ERROR_OTHER.getMessage(player));
+            case MAX_BLOCKS_AREA:
+                cleanup(uuid, true);
+                return;
             case NONE:
                 cleanup(uuid, false);
         }

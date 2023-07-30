@@ -177,21 +177,23 @@ public class ClaimDataManager implements Listener {
             int area = ContributionManager.getArea(newMinX, newMinZ, newMaxX, newMaxZ);
             int originalArea = ContributionManager.getArea(claim.getMinX(), claim.getMinZ(), claim.getMaxX(), claim.getMaxZ());
 
-            final GroupSettings groupSettings = CrashClaim.getPlugin().getPluginSupport().getPlayerGroupSettings(resizer);
+            int difference = area - originalArea;
 
-            if (groupSettings.getMaxClaimsArea() > 0) {
-                final long totalClaimed = getOwnedParentClaims(resizer.getUniqueId()).stream()
-                        .filter(c -> c.getOwner().equals(resizer.getUniqueId()))
-                        .map(c -> ContributionManager.getArea(c.getMinX(), c.getMinZ(), c.getMaxX(), c.getMaxZ()))
-                        .mapToInt(i -> i).sum();
+            if (!PermissionHelper.getPermissionHelper().getBypassManager().isBypass(resizer.getUniqueId())){
+                final GroupSettings groupSettings = CrashClaim.getPlugin().getPluginSupport().getPlayerGroupSettings(resizer);
 
-                if (totalClaimed + area > groupSettings.getMaxClaimsArea()) {
-                    resizer.spigot().sendMessage(Localization.NEW_CLAIM__TOO_BIG.getMessage(resizer, "actual", String.valueOf(totalClaimed), "new", String.valueOf(area), "max", String.valueOf(groupSettings.getMaxClaimsArea())));
-                    return ErrorType.NONE;
+                if (groupSettings.getMaxClaimsArea() > 0) {
+                    final long totalClaimed = getOwnedParentClaims(resizer.getUniqueId()).stream()
+                            .filter(c -> c.getOwner().equals(resizer.getUniqueId()))
+                            .map(c -> originalArea)
+                            .mapToInt(i -> i).sum();
+
+                    if (totalClaimed + difference > groupSettings.getMaxClaimsArea()) {
+                        resizer.spigot().sendMessage(Localization.NEW_CLAIM__TOO_BIG.getMessage(resizer, "actual", String.valueOf(totalClaimed), "new", String.valueOf(difference), "max", String.valueOf(groupSettings.getMaxClaimsArea())));
+                        return ErrorType.MAX_BLOCKS_AREA;
+                    }
                 }
             }
-
-            int difference = area - originalArea;
 
             if (difference > 0) {
                 int price = (int) Math.ceil(difference * GlobalConfig.money_per_block);

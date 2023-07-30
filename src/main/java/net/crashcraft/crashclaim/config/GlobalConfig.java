@@ -99,6 +99,12 @@ public class GlobalConfig extends BaseConfig{
         allowPlayerClaimTeleporting = getBoolean("allow-player-teleport-claim", false);
     }
 
+    public static int cooldownUnstuckCommand;
+
+    private static void loadUnstuck() {
+        cooldownUnstuckCommand = getInt("unstuck.cooldownInSec", 300);
+    }
+
     public static HashMap<PlayerTeleportEvent.TeleportCause, Integer> teleportCause;
 
     private static void loadTeleport(){

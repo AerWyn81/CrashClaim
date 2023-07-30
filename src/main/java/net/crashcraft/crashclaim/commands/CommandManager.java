@@ -44,6 +44,7 @@ public class CommandManager {
         commandManager.registerCommand(new ClaimInfoCommand(manager));
         commandManager.registerCommand(new EjectCommand(manager));
         commandManager.registerCommand(new AdminCommand(plugin, plugin.getMigrationManager()));
+        commandManager.registerCommand(new UnstuckCommand(manager));
     }
 
     private void loadCommandCompletions(){

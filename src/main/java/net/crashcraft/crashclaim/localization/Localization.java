@@ -50,6 +50,11 @@ public enum Localization {
     EJECT__SUCCESS("<green>You have successfully ejected that player to the edge of the claim."),
     EJECT__NO_CLAIM("<red>There is no claim where you are standing."),
 
+    UNSTUCK__NO_CLAIM("<red>There is no claim where you are standing."),
+    UNSTUCK__OWN_CLAIM("<red>You can't be stuck in your claim."),
+    UNSTUCK__SUCCESS("<green>You have been successfully unlocked."),
+    UNSTUCK__IN_COOLDOWN("<red>You can't unlock yet. Please wait <time> sec."),
+
     HIDE_CLAIMS__SUCCESS("<green>Claim visuals have been hidden."),
     SHOW_CLAIMS__SUCCESS("<green>Claim visuals have been shown."),
 

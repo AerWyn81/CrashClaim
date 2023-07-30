@@ -98,7 +98,7 @@ public class CrashClaimAPI {
         CompletableFuture<ArrayList<Claim>> completableFuture = new CompletableFuture<>();
 
         TaskChain<?> chain = CrashClaim.newChain();
-        chain.asyncFirst(() -> crashClaim.getDataManager().getOwnedClaims(player.getUniqueId()))
+        chain.asyncFirst(() -> crashClaim.getDataManager().getPermittedClaims(player.getUniqueId()))
                 .syncLast(completableFuture::complete)
                 .setErrorHandler(((e, task) -> completableFuture.completeExceptionally(e)));
         chain.execute();
@@ -113,7 +113,7 @@ public class CrashClaimAPI {
      * @return the ArrayList of claims
      */
     public ArrayList<Claim> getClaims(Player player){
-        return crashClaim.getDataManager().getOwnedClaims(player.getUniqueId());
+        return crashClaim.getDataManager().getPermittedClaims(player.getUniqueId());
     }
 
     /**

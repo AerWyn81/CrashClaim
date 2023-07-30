@@ -39,6 +39,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static net.crashcraft.crashclaim.data.StaticClaimLogic.getChunkHash;
 import static net.crashcraft.crashclaim.data.StaticClaimLogic.getChunkHashFromLocation;
@@ -183,8 +184,7 @@ public class ClaimDataManager implements Listener {
                 final GroupSettings groupSettings = CrashClaim.getPlugin().getPluginSupport().getPlayerGroupSettings(resizer);
 
                 if (groupSettings.getMaxClaimsArea() > 0) {
-                    final long totalClaimed = getOwnedParentClaims(resizer.getUniqueId()).stream()
-                            .filter(c -> c.getOwner().equals(resizer.getUniqueId()))
+                    final long totalClaimed = getOwnedClaims(resizer.getUniqueId()).stream()
                             .map(c -> originalArea)
                             .mapToInt(i -> i).sum();
 
@@ -683,7 +683,7 @@ public class ClaimDataManager implements Listener {
         group.setPlayerPermissionSet(claim.getOwner(), permissionSetup.getOwnerPermissionSet().clone());
     }
 
-    public ArrayList<Claim> getOwnedClaims(UUID uuid) {
+    public ArrayList<Claim> getPermittedClaims(UUID uuid) {
         ArrayList<Claim> claims = new ArrayList<>();
 
         for (Integer id : provider.getPermittedClaims(uuid)){
@@ -696,7 +696,7 @@ public class ClaimDataManager implements Listener {
         return claims;
     }
 
-    public int getNumberOwnedClaims(UUID uuid) {
+    public int getNumberPermittedClaims(UUID uuid) {
         return provider.getPermittedClaims(uuid).size();
     }
 
@@ -715,6 +715,14 @@ public class ClaimDataManager implements Listener {
 
     public int getNumberOwnedParentClaims(UUID uuid) {
         return provider.getOwnedParentClaims(uuid).size();
+    }
+
+    public ArrayList<Claim> getOwnedClaims(UUID uuid) {
+        return getOwnedParentClaims(uuid).stream().filter(c -> c.getOwner() == uuid).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public int getNumberOwnedClaims(UUID uuid) {
+        return getOwnedClaims(uuid).size();
     }
 
     public void setIdCounter(int idCounter) {

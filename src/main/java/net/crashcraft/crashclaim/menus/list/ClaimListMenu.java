@@ -47,7 +47,7 @@ public class ClaimListMenu extends GUI {
         TaskChain<?> chain = CrashClaim.newChain().async(() -> {
             try {
                 ClaimDataManager manager = CrashClaim.getPlugin().getDataManager();
-                claims.addAll(manager.getOwnedClaims(player.getUniqueId()));
+                claims.addAll(manager.getPermittedClaims(player.getUniqueId()));
             } catch (Exception ex){
                 ex.printStackTrace();
             }

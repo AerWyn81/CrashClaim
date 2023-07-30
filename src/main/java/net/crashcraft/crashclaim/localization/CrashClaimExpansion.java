@@ -23,17 +23,19 @@ public class CrashClaimExpansion extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (player != null){
             switch (params.toLowerCase()) {
+                case "total_permitted_claims" -> {
+                    return Integer.toString(crashClaim.getDataManager().getNumberPermittedClaims(player.getUniqueId()));
+                }
+                case "total_owned_parent_claims" -> {
+                    return Integer.toString(crashClaim.getDataManager().getNumberOwnedParentClaims(player.getUniqueId()));
+                }
                 case "total_owned_claims" -> {
                     return Integer.toString(crashClaim.getDataManager().getNumberOwnedClaims(player.getUniqueId()));
                 }
                 case "total_owned_claims_blocks" -> {
-                    return Integer.toString(crashClaim.getDataManager().getOwnedParentClaims(player.getUniqueId()).stream()
-                            .filter(c -> c.getOwner().equals(player.getUniqueId()))
+                    return Integer.toString(crashClaim.getDataManager().getOwnedClaims(player.getUniqueId()).stream()
                             .map(c -> ContributionManager.getArea(c.getMinX(), c.getMinZ(), c.getMaxX(), c.getMaxZ()))
                             .mapToInt(i -> i).sum());
-                }
-                case "total_owned_parent_claims" -> {
-                    return Integer.toString(crashClaim.getDataManager().getNumberOwnedParentClaims(player.getUniqueId()));
                 }
                 case "current_claim_owner" -> {
                     if (!player.isOnline()){

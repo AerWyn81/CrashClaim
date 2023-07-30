@@ -163,7 +163,7 @@ public class ClaimCommand extends BaseCommand implements Listener {
                     if (claim == null) {
                         TaskChain<?> chain = CrashClaim.newChain();
                         chain.asyncFirst(() -> {
-                            final int alreadyClaimed = dataManager.getNumberOwnedParentClaims(uuid);
+                            final int alreadyClaimed = dataManager.getNumberOwnedClaims(uuid);
                             final GroupSettings groupSettings = CrashClaim.getPlugin().getPluginSupport().getPlayerGroupSettings(player);
 
                             if (groupSettings.getMaxClaims() == -1) {

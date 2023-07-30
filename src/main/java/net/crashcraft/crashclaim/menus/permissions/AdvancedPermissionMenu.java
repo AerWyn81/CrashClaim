@@ -187,6 +187,11 @@ public class AdvancedPermissionMenu extends MenuListHelper {
     }
 
     @Override
+    public void onClose() {
+        claim.setToSave(true);
+    }
+
+    @Override
     public void onClick(InventoryClickEvent event, String rawItemName) {
         super.onClick(event, rawItemName);
 
